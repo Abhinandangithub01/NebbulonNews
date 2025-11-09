@@ -116,9 +116,9 @@ aws s3api put-bucket-cors --bucket nebbulon-news-images --cors-configuration fil
 
 | Key | Value |
 |-----|-------|
-| `AWS_REGION` | `ap-south-1` |
-| `AWS_ACCESS_KEY_ID` | `your-aws-access-key-id` |
-| `AWS_SECRET_ACCESS_KEY` | `your-aws-secret-access-key` |
+| `NEBBULON_AWS_REGION` | `ap-south-1` |
+| `NEBBULON_AWS_ACCESS_KEY_ID` | `your-aws-access-key-id` |
+| `NEBBULON_AWS_SECRET_ACCESS_KEY` | `your-aws-secret-access-key` |
 | `DYNAMODB_TABLE_NEWS` | `nebbulon-news-articles` |
 | `DYNAMODB_TABLE_ADMINS` | `nebbulon-admins` |
 | `S3_BUCKET_NAME` | `nebbulon-news-images` (or your bucket name) |

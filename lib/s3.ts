@@ -2,11 +2,11 @@ import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 const s3Client = new S3Client({
-  region: process.env.AWS_REGION || 'ap-south-1',
-  credentials: process.env.AWS_ACCESS_KEY_ID
+  region: process.env.NEBBULON_AWS_REGION || process.env.AWS_REGION || 'ap-south-1',
+  credentials: process.env.NEBBULON_AWS_ACCESS_KEY_ID || process.env.AWS_ACCESS_KEY_ID
     ? {
-        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
+        accessKeyId: (process.env.NEBBULON_AWS_ACCESS_KEY_ID || process.env.AWS_ACCESS_KEY_ID)!,
+        secretAccessKey: (process.env.NEBBULON_AWS_SECRET_ACCESS_KEY || process.env.AWS_SECRET_ACCESS_KEY)!,
       }
     : undefined,
 });
@@ -29,7 +29,8 @@ export const uploadToS3 = async (
   await s3Client.send(command);
 
   // Return public URL
-  return `https://${BUCKET_NAME}.s3.${process.env.AWS_REGION || 'ap-south-1'}.amazonaws.com/${fileName}`;
+  const region = process.env.NEBBULON_AWS_REGION || process.env.AWS_REGION || 'ap-south-1';
+  return `https://${BUCKET_NAME}.s3.${region}.amazonaws.com/${fileName}`;
 };
 
 export default s3Client;

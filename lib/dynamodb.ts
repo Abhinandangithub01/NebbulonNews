@@ -11,15 +11,15 @@ import {
 
 // Initialize DynamoDB client
 const client = new DynamoDBClient({
-  region: process.env.AWS_REGION || 'ap-south-1',
+  region: process.env.NEBBULON_AWS_REGION || process.env.AWS_REGION || 'ap-south-1',
   // Use local DynamoDB if endpoint is set
   ...(process.env.DYNAMODB_ENDPOINT && {
     endpoint: process.env.DYNAMODB_ENDPOINT,
   }),
-  credentials: process.env.AWS_ACCESS_KEY_ID
+  credentials: process.env.NEBBULON_AWS_ACCESS_KEY_ID || process.env.AWS_ACCESS_KEY_ID
     ? {
-        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
+        accessKeyId: (process.env.NEBBULON_AWS_ACCESS_KEY_ID || process.env.AWS_ACCESS_KEY_ID)!,
+        secretAccessKey: (process.env.NEBBULON_AWS_SECRET_ACCESS_KEY || process.env.AWS_SECRET_ACCESS_KEY)!,
       }
     : process.env.DYNAMODB_ENDPOINT
     ? {

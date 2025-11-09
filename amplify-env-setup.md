@@ -12,10 +12,12 @@ Click **"Manage variables"** and add the following:
 
 ### AWS Configuration
 ```
-AWS_REGION = ap-south-1
-AWS_ACCESS_KEY_ID = your-aws-access-key-id
-AWS_SECRET_ACCESS_KEY = your-aws-secret-access-key
+NEBBULON_AWS_REGION = ap-south-1
+NEBBULON_AWS_ACCESS_KEY_ID = your-aws-access-key-id
+NEBBULON_AWS_SECRET_ACCESS_KEY = your-aws-secret-access-key
 ```
+
+**Note:** Amplify doesn't allow environment variables starting with "AWS_" prefix, so we use "NEBBULON_AWS_" instead.
 
 ### DynamoDB Tables
 ```
