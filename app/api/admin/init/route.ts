@@ -39,7 +39,16 @@ export async function POST() {
   } catch (error) {
     console.error('Admin init error:', error);
     return NextResponse.json(
-      { message: 'Failed to create admin' },
+      { 
+        message: 'Failed to create admin',
+        error: error instanceof Error ? error.message : 'Unknown error',
+        env: {
+          hasRegion: !!process.env.NEBBULON_AWS_REGION,
+          hasAccessKey: !!process.env.NEBBULON_AWS_ACCESS_KEY_ID,
+          hasSecretKey: !!process.env.NEBBULON_AWS_SECRET_ACCESS_KEY,
+          hasAdminTable: !!process.env.DYNAMODB_TABLE_ADMINS,
+        }
+      },
       { status: 500 }
     );
   }
