@@ -46,7 +46,7 @@ const mockArticles: Record<NewsCategory, NewsArticle[]> = {
       excerpt: 'Fed Chair hints at policy shift as inflation cools.',
       content: '<p>Content...</p>',
       featuredImage: 'https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=1200',
-      author: 'David Thompson',
+      author: { name: 'David Thompson', email: 'david@nebbulon.com' },
       views: 1600,
       published: true,
       featured: false,
