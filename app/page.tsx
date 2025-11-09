@@ -13,39 +13,138 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import NewsCard from '@/components/NewsCard';
 import AdSense from '@/components/AdSense';
-import { ArticleDB } from '@/lib/db/articles';
-import { NewsCategory } from '@/types';
+import { NewsArticle } from '@/types';
 
-// Force dynamic rendering
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
-
-async function getLatestNews() {
-  try {
-    const articles = await ArticleDB.getAll({ published: true, limit: 10 });
-    return articles;
-  } catch (error) {
-    console.error('Error fetching latest news:', error);
-    return [];
-  }
-}
-
-async function getCategoryNews(category: NewsCategory, limit = 4) {
-  try {
-    const articles = await ArticleDB.getAll({ category, published: true, limit });
-    return articles;
-  } catch (error) {
-    console.error(`Error fetching ${category} news:`, error);
-    return [];
-  }
-}
+// Mock data for demo
+const mockArticles: NewsArticle[] = [
+  {
+    _id: '1',
+    title: 'Tesla Unveils Revolutionary Electric Sedan with 600-Mile Range',
+    slug: 'tesla-revolutionary-electric-sedan',
+    category: 'automobiles',
+    excerpt: 'Tesla announces groundbreaking battery technology that could change the EV industry forever.',
+    content: '<p>Tesla has unveiled its latest electric sedan...</p>',
+    featuredImage: 'https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=1200',
+    author: 'Sarah Johnson',
+    views: 1250,
+    published: true,
+    featured: true,
+    createdAt: new Date('2024-11-09'),
+    updatedAt: new Date('2024-11-09'),
+  },
+  {
+    _id: '2',
+    title: 'Stock Market Hits Record High as Tech Sector Rallies',
+    slug: 'stock-market-record-high',
+    category: 'finance',
+    excerpt: 'Major indices reach all-time highs driven by strong earnings from technology companies.',
+    content: '<p>The S&P 500 and Nasdaq Composite...</p>',
+    featuredImage: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1200',
+    author: 'Michael Chen',
+    views: 2100,
+    published: true,
+    featured: true,
+    createdAt: new Date('2024-11-09'),
+    updatedAt: new Date('2024-11-09'),
+  },
+  {
+    _id: '3',
+    title: 'AI Breakthrough: New Model Achieves Human-Level Reasoning',
+    slug: 'ai-breakthrough-human-reasoning',
+    category: 'tech',
+    excerpt: 'Researchers unveil AI system that demonstrates unprecedented problem-solving capabilities.',
+    content: '<p>A team of researchers has developed...</p>',
+    featuredImage: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=1200',
+    author: 'Dr. Emily Rodriguez',
+    views: 3500,
+    published: true,
+    featured: true,
+    createdAt: new Date('2024-11-09'),
+    updatedAt: new Date('2024-11-09'),
+  },
+  {
+    _id: '4',
+    title: 'Box Office: Epic Fantasy Film Breaks Opening Weekend Records',
+    slug: 'fantasy-film-box-office-records',
+    category: 'cinema',
+    excerpt: 'New fantasy blockbuster shatters expectations with $235M global opening weekend.',
+    content: '<p>The highly anticipated fantasy epic...</p>',
+    featuredImage: 'https://images.unsplash.com/photo-1594908900066-3f47337549d8?w=1200',
+    author: 'James Martinez',
+    views: 1800,
+    published: true,
+    featured: false,
+    createdAt: new Date('2024-11-08'),
+    updatedAt: new Date('2024-11-08'),
+  },
+  {
+    _id: '5',
+    title: 'Federal Reserve Signals Potential Interest Rate Cuts',
+    slug: 'fed-interest-rate-cuts',
+    category: 'finance',
+    excerpt: 'Fed Chair hints at policy shift as inflation shows signs of cooling.',
+    content: '<p>Federal Reserve Chair Jerome Powell...</p>',
+    featuredImage: 'https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=1200',
+    author: 'David Thompson',
+    views: 1600,
+    published: true,
+    featured: false,
+    createdAt: new Date('2024-11-08'),
+    updatedAt: new Date('2024-11-08'),
+  },
+  {
+    _id: '6',
+    title: 'Quantum Computing Startup Achieves Error Correction Milestone',
+    slug: 'quantum-computing-milestone',
+    category: 'tech',
+    excerpt: 'Major breakthrough in quantum error correction brings practical quantum computers closer.',
+    content: '<p>A Silicon Valley startup has demonstrated...</p>',
+    featuredImage: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=1200',
+    author: 'Dr. Lisa Wang',
+    views: 2200,
+    published: true,
+    featured: false,
+    createdAt: new Date('2024-11-08'),
+    updatedAt: new Date('2024-11-08'),
+  },
+  {
+    _id: '7',
+    title: 'Luxury SUV Market Sees Surge in Hybrid Models',
+    slug: 'luxury-suv-hybrid-surge',
+    category: 'automobiles',
+    excerpt: 'Premium automakers report record demand for hybrid luxury SUVs.',
+    content: '<p>Luxury automakers are reporting...</p>',
+    featuredImage: 'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=1200',
+    author: 'Robert Anderson',
+    views: 980,
+    published: true,
+    featured: false,
+    createdAt: new Date('2024-11-07'),
+    updatedAt: new Date('2024-11-07'),
+  },
+  {
+    _id: '8',
+    title: 'Streaming Wars: New Platform Launches with Exclusive Content',
+    slug: 'streaming-platform-launch',
+    category: 'cinema',
+    excerpt: 'Major studio launches streaming service with library of classic films.',
+    content: '<p>A major Hollywood studio has entered...</p>',
+    featuredImage: 'https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=1200',
+    author: 'Amanda Foster',
+    views: 1400,
+    published: true,
+    featured: false,
+    createdAt: new Date('2024-11-07'),
+    updatedAt: new Date('2024-11-07'),
+  },
+];
 
 export default async function HomePage() {
-  const latestNews = await getLatestNews();
-  const financeNews = await getCategoryNews('finance');
-  const autoNews = await getCategoryNews('automobiles');
-  const techNews = await getCategoryNews('tech');
-  const cinemaNews = await getCategoryNews('cinema');
+  const latestNews = mockArticles;
+  const financeNews = mockArticles.filter(a => a.category === 'finance');
+  const autoNews = mockArticles.filter(a => a.category === 'automobiles');
+  const techNews = mockArticles.filter(a => a.category === 'tech');
+  const cinemaNews = mockArticles.filter(a => a.category === 'cinema');
 
   const featuredArticle = latestNews[0];
   const recentArticles = latestNews.slice(1, 5);

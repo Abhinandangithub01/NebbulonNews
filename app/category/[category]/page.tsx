@@ -64,7 +64,7 @@ export default async function CategoryPage({
     notFound();
   }
 
-  const articles = await getCategoryArticles(category);
+  const articles = mockArticles[category] || [];
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
