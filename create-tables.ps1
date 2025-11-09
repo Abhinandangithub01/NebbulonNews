@@ -8,7 +8,7 @@ aws dynamodb create-table `
     --attribute-definitions AttributeName=_id,AttributeType=S `
     --key-schema AttributeName=_id,KeyType=HASH `
     --billing-mode PAY_PER_REQUEST `
-    --region us-east-1
+    --region ap-south-1
 
 # Create Admins Table
 aws dynamodb create-table `
@@ -16,9 +16,9 @@ aws dynamodb create-table `
     --attribute-definitions AttributeName=_id,AttributeType=S `
     --key-schema AttributeName=_id,KeyType=HASH `
     --billing-mode PAY_PER_REQUEST `
-    --region us-east-1
+    --region ap-south-1
 
 Write-Host "Tables created! Waiting for them to become active..." -ForegroundColor Yellow
-aws dynamodb wait table-exists --table-name nebbulon-news-articles --region us-east-1
-aws dynamodb wait table-exists --table-name nebbulon-admins --region us-east-1
+aws dynamodb wait table-exists --table-name nebbulon-news-articles --region ap-south-1
+aws dynamodb wait table-exists --table-name nebbulon-admins --region ap-south-1
 Write-Host "Done! Tables are ready." -ForegroundColor Green
