@@ -22,7 +22,9 @@ import { useRouter } from 'next/navigation';
 
 export default function SuperAdminLogin() {
   const router = useRouter();
-  const { status } = useSession();
+  const [mounted, setMounted] = useState(false);
+  const session = useSession();
+  const status = session?.status || 'loading';
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -64,12 +66,22 @@ export default function SuperAdminLogin() {
     }
   };
 
+  // Set mounted state
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   // Redirect if already logged in
   useEffect(() => {
-    if (status === 'authenticated') {
+    if (mounted && status === 'authenticated') {
       router.push('/admin/dashboard');
     }
-  }, [status, router]);
+  }, [mounted, status, router]);
+
+  // Prevent SSR
+  if (!mounted) {
+    return null;
+  }
 
   return (
     <div
