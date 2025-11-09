@@ -144,7 +144,7 @@ export default async function NewsDetailPage({
               <AdSense adSlot="2222222222" adFormat="horizontal" />
 
               {/* Tags */}
-              {article.tags.length > 0 && (
+              {article.tags && article.tags.length > 0 && (
                 <Paper p="md" withBorder>
                   <Group gap="xs">
                     <Text size="sm" fw={600}>
