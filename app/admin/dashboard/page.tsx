@@ -25,9 +25,15 @@ import { useRouter } from 'next/navigation';
 import { signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
 
-export default function AdminDashboard() {
+// Prevent SSR for this page
+export const dynamic = 'force-dynamic';
+
+function AdminDashboard() {
   const router = useRouter();
-  const { data: session, status } = useSession();
+  const [mounted, setMounted] = useState(false);
+  const session = useSession();
+  const sessionData = session?.data;
+  const status = session?.status || 'loading';
   const [stats, setStats] = useState({
     totalArticles: 0,
     publishedArticles: 0,
@@ -36,14 +42,20 @@ export default function AdminDashboard() {
   const [recentArticles, setRecentArticles] = useState<any[]>([]);
 
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
     if (status === 'unauthenticated') {
       router.push('/admin/login');
     }
   }, [status, router]);
 
   useEffect(() => {
-    fetchDashboardData();
-  }, []);
+    if (mounted) {
+      fetchDashboardData();
+    }
+  }, [mounted]);
 
   const fetchDashboardData = async () => {
     try {
@@ -74,8 +86,12 @@ export default function AdminDashboard() {
     }
   };
 
-  if (status === 'loading') {
-    return <div>Loading...</div>;
+  if (!mounted || status === 'loading') {
+    return (
+      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <Text>Loading...</Text>
+      </div>
+    );
   }
 
   return (
@@ -86,7 +102,7 @@ export default function AdminDashboard() {
           <Group justify="space-between">
             <div>
               <Title order={1}>Admin Dashboard</Title>
-              <Text c="dimmed">Welcome back, {session?.user?.name}</Text>
+              <Text c="dimmed">Welcome back, {sessionData?.user?.name}</Text>
             </div>
             <Group>
               <Link href="/" style={{ textDecoration: 'none' }}>
@@ -215,3 +231,6 @@ export default function AdminDashboard() {
     </div>
   );
 }
+
+// Export with no SSR
+export default AdminDashboard;

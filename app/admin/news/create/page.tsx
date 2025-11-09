@@ -1,5 +1,8 @@
 'use client';
 
+// Prevent SSR for this page
+export const dynamic = 'force-dynamic';
+
 import { useState } from 'react';
 import {
   Container,
