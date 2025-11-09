@@ -25,6 +25,12 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         {/* Google AdSense Verification */}
         <meta name="google-adsense-account" content="ca-pub-4287519101247440" />
+        {/* Google AdSense Script */}
+        <script 
+          async 
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4287519101247440"
+          crossOrigin="anonymous"
+        />
       </head>
       <body>
         <MantineProvider defaultColorScheme="dark">

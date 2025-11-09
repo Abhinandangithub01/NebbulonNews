@@ -15,6 +15,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import NewsCard from '@/components/NewsCard';
 import AdSense from '@/components/AdSense';
+import AdSenseDisplay from '@/components/AdSenseDisplay';
 import { NewsArticle } from '@/types';
 
 // Mock data for demo
@@ -182,6 +183,11 @@ export default function HomePage() {
                     </Grid.Col>
                   ))}
                 </Grid>
+              </div>
+
+              {/* Google AdSense Ad */}
+              <div style={{ margin: '2rem 0' }}>
+                <AdSenseDisplay adSlot="7470621474" />
               </div>
 
               {/* Finance Section */}
