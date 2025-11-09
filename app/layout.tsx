@@ -23,6 +23,8 @@ export default function RootLayout({
         <ColorSchemeScript defaultColorScheme="dark" />
         <link rel="icon" href="/favicon.ico" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        {/* Google AdSense Verification */}
+        <meta name="google-adsense-account" content="ca-pub-4287519101247440" />
       </head>
       <body>
         <MantineProvider defaultColorScheme="dark">
