@@ -26,14 +26,19 @@ export const ArticleDB = {
 
   // Get article by slug
   getBySlug: async (slug: string): Promise<NewsArticle | null> => {
-    const items = await dynamoDB.scan(TABLES.NEWS_ARTICLES, {
-      FilterExpression: 'slug = :slug AND published = :published',
-      ExpressionAttributeValues: {
-        ':slug': slug,
-        ':published': true,
-      },
-    });
-    return items[0] as NewsArticle | null;
+    try {
+      const items = await dynamoDB.scan(TABLES.NEWS_ARTICLES, {
+        FilterExpression: 'slug = :slug AND published = :published',
+        ExpressionAttributeValues: {
+          ':slug': slug,
+          ':published': true,
+        },
+      });
+      return items[0] as NewsArticle | null;
+    } catch (error) {
+      console.error('Error fetching article by slug:', error);
+      return null;
+    }
   },
 
   // Get all articles (with optional filters)
@@ -42,43 +47,48 @@ export const ArticleDB = {
     published?: boolean;
     limit?: number;
   }): Promise<NewsArticle[]> => {
-    let items: any[];
+    try {
+      let items: any[];
 
-    if (filters?.category) {
-      // Query by category (requires GSI)
-      items = await dynamoDB.scan(TABLES.NEWS_ARTICLES, {
-        FilterExpression: filters.published !== undefined
-          ? 'category = :category AND published = :published'
-          : 'category = :category',
-        ExpressionAttributeValues: filters.published !== undefined
-          ? {
-              ':category': filters.category,
-              ':published': filters.published,
-            }
-          : {
-              ':category': filters.category,
-            },
-      });
-    } else if (filters?.published !== undefined) {
-      items = await dynamoDB.scan(TABLES.NEWS_ARTICLES, {
-        FilterExpression: 'published = :published',
-        ExpressionAttributeValues: {
-          ':published': filters.published,
-        },
-      });
-    } else {
-      items = await dynamoDB.scan(TABLES.NEWS_ARTICLES);
+      if (filters?.category) {
+        // Query by category (requires GSI)
+        items = await dynamoDB.scan(TABLES.NEWS_ARTICLES, {
+          FilterExpression: filters.published !== undefined
+            ? 'category = :category AND published = :published'
+            : 'category = :category',
+          ExpressionAttributeValues: filters.published !== undefined
+            ? {
+                ':category': filters.category,
+                ':published': filters.published,
+              }
+            : {
+                ':category': filters.category,
+              },
+        });
+      } else if (filters?.published !== undefined) {
+        items = await dynamoDB.scan(TABLES.NEWS_ARTICLES, {
+          FilterExpression: 'published = :published',
+          ExpressionAttributeValues: {
+            ':published': filters.published,
+          },
+        });
+      } else {
+        items = await dynamoDB.scan(TABLES.NEWS_ARTICLES);
+      }
+
+      // Sort by createdAt descending
+      items.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+
+      // Apply limit
+      if (filters?.limit) {
+        items = items.slice(0, filters.limit);
+      }
+
+      return items as NewsArticle[];
+    } catch (error) {
+      console.error('Error fetching articles:', error);
+      return [];
     }
-
-    // Sort by createdAt descending
-    items.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-
-    // Apply limit
-    if (filters?.limit) {
-      items = items.slice(0, filters.limit);
-    }
-
-    return items as NewsArticle[];
   },
 
   // Update article
@@ -115,16 +125,25 @@ export const ArticleDB = {
     publishedArticles: number;
     totalViews: number;
   }> => {
-    const allArticles = await dynamoDB.scan(TABLES.NEWS_ARTICLES);
-    
-    const totalArticles = allArticles.length;
-    const publishedArticles = allArticles.filter((a: any) => a.published).length;
-    const totalViews = allArticles.reduce((sum: number, a: any) => sum + (a.views || 0), 0);
+    try {
+      const allArticles = await dynamoDB.scan(TABLES.NEWS_ARTICLES);
+      
+      const totalArticles = allArticles.length;
+      const publishedArticles = allArticles.filter((a: any) => a.published).length;
+      const totalViews = allArticles.reduce((sum: number, a: any) => sum + (a.views || 0), 0);
 
-    return {
-      totalArticles,
-      publishedArticles,
-      totalViews,
-    };
+      return {
+        totalArticles,
+        publishedArticles,
+        totalViews,
+      };
+    } catch (error) {
+      console.error('Error fetching stats:', error);
+      return {
+        totalArticles: 0,
+        publishedArticles: 0,
+        totalViews: 0,
+      };
+    }
   },
 };
