@@ -10,12 +10,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import NewsCard from '@/components/NewsCard';
 import AdSense from '@/components/AdSense';
-import { ArticleDB } from '@/lib/db/articles';
-import { NewsCategory } from '@/types';
-
-// Force dynamic rendering
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
+import { NewsCategory, NewsArticle } from '@/types';
 
 const validCategories: NewsCategory[] = ['finance', 'automobiles', 'tech', 'cinema'];
 
@@ -26,14 +21,135 @@ const categoryTitles: Record<NewsCategory, string> = {
   cinema: 'Cinema News',
 };
 
-async function getCategoryArticles(category: NewsCategory) {
-  try {
-    const articles = await ArticleDB.getAll({ category, published: true, limit: 20 });
-    return articles;
-  } catch (error) {
-    console.error(`Error fetching ${category} articles:`, error);
-    return [];
-  }
+const mockArticles: Record<NewsCategory, NewsArticle[]> = {
+  finance: [
+    {
+      _id: '2',
+      title: 'Stock Market Hits Record High as Tech Sector Rallies',
+      slug: 'stock-market-record-high',
+      category: 'finance',
+      excerpt: 'Major indices reach all-time highs driven by strong earnings.',
+      content: '<p>Content...</p>',
+      featuredImage: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1200',
+      author: 'Michael Chen',
+      views: 2100,
+      published: true,
+      featured: true,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },
+    {
+      _id: '5',
+      title: 'Federal Reserve Signals Potential Interest Rate Cuts',
+      slug: 'fed-interest-rate-cuts',
+      category: 'finance',
+      excerpt: 'Fed Chair hints at policy shift as inflation cools.',
+      content: '<p>Content...</p>',
+      featuredImage: 'https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=1200',
+      author: 'David Thompson',
+      views: 1600,
+      published: true,
+      featured: false,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },
+  ],
+  automobiles: [
+    {
+      _id: '1',
+      title: 'Tesla Unveils Revolutionary Electric Sedan with 600-Mile Range',
+      slug: 'tesla-revolutionary-electric-sedan',
+      category: 'automobiles',
+      excerpt: 'Tesla announces groundbreaking battery technology.',
+      content: '<p>Content...</p>',
+      featuredImage: 'https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=1200',
+      author: 'Sarah Johnson',
+      views: 1250,
+      published: true,
+      featured: true,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },
+    {
+      _id: '7',
+      title: 'Luxury SUV Market Sees Surge in Hybrid Models',
+      slug: 'luxury-suv-hybrid-surge',
+      category: 'automobiles',
+      excerpt: 'Premium automakers report record demand for hybrids.',
+      content: '<p>Content...</p>',
+      featuredImage: 'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=1200',
+      author: 'Robert Anderson',
+      views: 980,
+      published: true,
+      featured: false,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },
+  ],
+  tech: [
+    {
+      _id: '3',
+      title: 'AI Breakthrough: New Model Achieves Human-Level Reasoning',
+      slug: 'ai-breakthrough-human-reasoning',
+      category: 'tech',
+      excerpt: 'Researchers unveil AI with unprecedented capabilities.',
+      content: '<p>Content...</p>',
+      featuredImage: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=1200',
+      author: 'Dr. Emily Rodriguez',
+      views: 3500,
+      published: true,
+      featured: true,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },
+    {
+      _id: '6',
+      title: 'Quantum Computing Startup Achieves Error Correction Milestone',
+      slug: 'quantum-computing-milestone',
+      category: 'tech',
+      excerpt: 'Major breakthrough brings quantum computers closer.',
+      content: '<p>Content...</p>',
+      featuredImage: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=1200',
+      author: 'Dr. Lisa Wang',
+      views: 2200,
+      published: true,
+      featured: false,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },
+  ],
+  cinema: [
+    {
+      _id: '4',
+      title: 'Box Office: Epic Fantasy Film Breaks Opening Weekend Records',
+      slug: 'fantasy-film-box-office-records',
+      category: 'cinema',
+      excerpt: 'New fantasy blockbuster shatters expectations.',
+      content: '<p>Content...</p>',
+      featuredImage: 'https://images.unsplash.com/photo-1594908900066-3f47337549d8?w=1200',
+      author: 'James Martinez',
+      views: 1800,
+      published: true,
+      featured: false,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },
+    {
+      _id: '8',
+      title: 'Streaming Wars: New Platform Launches with Exclusive Content',
+      slug: 'streaming-platform-launch',
+      category: 'cinema',
+      excerpt: 'Major studio launches streaming service.',
+      content: '<p>Content...</p>',
+      featuredImage: 'https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=1200',
+      author: 'Amanda Foster',
+      views: 1400,
+      published: true,
+      featured: false,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },
+  ],
 }
 
 export async function generateMetadata({
