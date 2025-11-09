@@ -34,9 +34,14 @@ export const AdminDB = {
 
   // Check if any admin exists
   exists: async (): Promise<boolean> => {
-    const items = await dynamoDB.scan(TABLES.ADMINS, {
-      Limit: 1,
-    });
-    return items.length > 0;
+    try {
+      const items = await dynamoDB.scan(TABLES.ADMINS, {
+        Limit: 1,
+      });
+      return items.length > 0;
+    } catch (error) {
+      console.error('Error checking admin existence:', error);
+      return false;
+    }
   },
 };

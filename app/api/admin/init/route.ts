@@ -2,6 +2,11 @@ import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import { AdminDB } from '@/lib/db/admins';
 
+// Allow GET requests too for easy browser access
+export async function GET() {
+  return POST();
+}
+
 export async function POST() {
   try {
     // Check if admin already exists
