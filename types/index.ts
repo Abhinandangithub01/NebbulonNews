@@ -12,8 +12,9 @@ export interface NewsArticle {
     name: string;
     email: string;
   };
-  tags: string[];
+  tags?: string[];
   published: boolean;
+  featured?: boolean;
   views: number;
   createdAt: Date;
   updatedAt: Date;
