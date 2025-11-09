@@ -4,8 +4,12 @@ frontend:
     preBuild:
       commands:
         - npm ci
+        - echo "Environment variables check:"
+        - echo "NEBBULON_AWS_REGION=$NEBBULON_AWS_REGION"
+        - echo "DYNAMODB_TABLE_NEWS=$DYNAMODB_TABLE_NEWS"
     build:
       commands:
+        - env | grep -E "NEBBULON|DYNAMODB|S3_BUCKET|NEXTAUTH|ADMIN" || true
         - npm run build
   artifacts:
     baseDirectory: .next
