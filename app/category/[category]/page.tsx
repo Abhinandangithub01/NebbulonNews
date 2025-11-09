@@ -1,3 +1,5 @@
+'use client';
+
 import {
   Container,
   Grid,
@@ -150,23 +152,6 @@ const mockArticles: Record<NewsCategory, NewsArticle[]> = {
       updatedAt: new Date(),
     },
   ],
-}
-
-export async function generateMetadata({
-  params,
-}: {
-  params: { category: string };
-}) {
-  const category = params.category as NewsCategory;
-  
-  if (!validCategories.includes(category)) {
-    return { title: 'Category Not Found' };
-  }
-
-  return {
-    title: `${categoryTitles[category]} | Nebbulon News`,
-    description: `Latest ${categoryTitles[category].toLowerCase()} and updates`,
-  };
 }
 
 export default function CategoryPage({

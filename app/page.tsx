@@ -1,3 +1,5 @@
+'use client';
+
 import {
   Container,
   Grid,
@@ -139,7 +141,7 @@ const mockArticles: NewsArticle[] = [
   },
 ];
 
-export default async function HomePage() {
+export default function HomePage() {
   const latestNews = mockArticles;
   const financeNews = mockArticles.filter(a => a.category === 'finance');
   const autoNews = mockArticles.filter(a => a.category === 'automobiles');
