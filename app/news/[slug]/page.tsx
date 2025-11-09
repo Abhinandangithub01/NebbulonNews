@@ -57,7 +57,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   return {
     title: `${article.title} | Nebbulon News`,
     description: article.excerpt,
-    keywords: article.tags.join(', '),
+    keywords: article.tags?.join(', ') || article.category,
   };
 }
 
