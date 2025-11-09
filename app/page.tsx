@@ -8,8 +8,12 @@ import {
   Text,
   Group,
   Button,
+  Paper,
+  NavLink,
+  Box,
+  Flex,
 } from '@mantine/core';
-import { IconArrowRight } from '@tabler/icons-react';
+import { IconArrowRight, IconChartLine, IconCar, IconDeviceLaptop, IconMovie } from '@tabler/icons-react';
 import Link from 'next/link';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -152,33 +156,64 @@ export default function HomePage() {
   const featuredArticle = latestNews[0];
   const recentArticles = latestNews.slice(1, 5);
 
+  const categories = [
+    { name: 'Finance', icon: IconChartLine, href: '/category/finance', color: 'blue' },
+    { name: 'Automobiles', icon: IconCar, href: '/category/automobiles', color: 'red' },
+    { name: 'Tech', icon: IconDeviceLaptop, href: '/category/tech', color: 'cyan' },
+    { name: 'Cinema', icon: IconMovie, href: '/category/cinema', color: 'grape' },
+  ];
+
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <Header />
       
-      <Container size="xl" py="xl" style={{ flex: 1 }}>
-        <Grid gutter="xl">
+      <Container size="xl" py="md" style={{ flex: 1 }}>
+        <Flex gap="lg">
+          {/* Left Sidebar Navigation - Hidden on mobile */}
+          <Box 
+            className="left-sidebar"
+            style={{ 
+              width: '240px', 
+              flexShrink: 0
+            }}
+          >
+            <Paper p="lg" withBorder style={{ position: 'sticky', top: '100px', backgroundColor: '#25262B' }}>
+              <Title order={4} mb="md" c="white">Categories</Title>
+              <Stack gap="xs">
+                {categories.map((cat) => (
+                  <NavLink
+                    key={cat.name}
+                    component={Link}
+                    href={cat.href}
+                    label={cat.name}
+                    leftSection={<cat.icon size={20} />}
+                    variant="light"
+                    style={{ borderRadius: '8px', padding: '12px' }}
+                  />
+                ))}
+              </Stack>
+            </Paper>
+          </Box>
+
           {/* Main Content */}
-          <Grid.Col span={{ base: 12, md: 8 }}>
-            <Stack gap="xl">
+          <Box style={{ flex: 1, minWidth: 0 }}>
+            <Stack gap="md">
               {/* Featured Article */}
               {featuredArticle && (
                 <div>
-                  <Title order={2} mb="md">
+                  <Title order={3} mb="sm">
                     Featured Story
                   </Title>
                   <NewsCard article={featuredArticle} featured />
                 </div>
               )}
 
-              {/* Latest News */}
+              {/* Latest News - Compact Grid */}
               <div>
-                <Group justify="space-between" mb="md">
-                  <Title order={2}>Latest News</Title>
-                </Group>
-                <Grid>
+                <Title order={3} mb="sm">Latest News</Title>
+                <Grid gutter="sm">
                   {recentArticles.map((article) => (
-                    <Grid.Col key={article._id} span={{ base: 12, sm: 6 }}>
+                    <Grid.Col key={article._id} span={{ base: 12, sm: 6, lg: 3 }}>
                       <NewsCard article={article} />
                     </Grid.Col>
                   ))}
@@ -186,24 +221,24 @@ export default function HomePage() {
               </div>
 
               {/* Google AdSense Ad */}
-              <div style={{ margin: '2rem 0' }}>
+              <div style={{ margin: '1rem 0' }}>
                 <AdSenseDisplay adSlot="7470621474" />
               </div>
 
-              {/* Finance Section */}
+              {/* Finance Section - Compact */}
               {financeNews.length > 0 && (
                 <div>
-                  <Group justify="space-between" mb="md">
-                    <Title order={2}>Finance</Title>
+                  <Group justify="space-between" mb="sm">
+                    <Title order={3}>Finance</Title>
                     <Link href="/category/finance" style={{ textDecoration: 'none' }}>
-                      <Button variant="subtle" rightSection={<IconArrowRight size={16} />}>
+                      <Button variant="subtle" size="sm" rightSection={<IconArrowRight size={14} />}>
                         View All
                       </Button>
                     </Link>
                   </Group>
-                  <Grid>
-                    {financeNews.map((article) => (
-                      <Grid.Col key={article._id} span={{ base: 12, sm: 6 }}>
+                  <Grid gutter="sm">
+                    {financeNews.slice(0, 4).map((article) => (
+                      <Grid.Col key={article._id} span={{ base: 12, sm: 6, lg: 3 }}>
                         <NewsCard article={article} />
                       </Grid.Col>
                     ))}
@@ -211,20 +246,20 @@ export default function HomePage() {
                 </div>
               )}
 
-              {/* Automobiles Section */}
+              {/* Automobiles Section - Compact */}
               {autoNews.length > 0 && (
                 <div>
-                  <Group justify="space-between" mb="md">
-                    <Title order={2}>Automobiles</Title>
+                  <Group justify="space-between" mb="sm">
+                    <Title order={3}>Automobiles</Title>
                     <Link href="/category/automobiles" style={{ textDecoration: 'none' }}>
-                      <Button variant="subtle" rightSection={<IconArrowRight size={16} />}>
+                      <Button variant="subtle" size="sm" rightSection={<IconArrowRight size={14} />}>
                         View All
                       </Button>
                     </Link>
                   </Group>
-                  <Grid>
-                    {autoNews.map((article) => (
-                      <Grid.Col key={article._id} span={{ base: 12, sm: 6 }}>
+                  <Grid gutter="sm">
+                    {autoNews.slice(0, 4).map((article) => (
+                      <Grid.Col key={article._id} span={{ base: 12, sm: 6, lg: 3 }}>
                         <NewsCard article={article} />
                       </Grid.Col>
                     ))}
@@ -232,20 +267,20 @@ export default function HomePage() {
                 </div>
               )}
 
-              {/* Tech Section */}
+              {/* Tech Section - Compact */}
               {techNews.length > 0 && (
                 <div>
-                  <Group justify="space-between" mb="md">
-                    <Title order={2}>Technology</Title>
+                  <Group justify="space-between" mb="sm">
+                    <Title order={3}>Technology</Title>
                     <Link href="/category/tech" style={{ textDecoration: 'none' }}>
-                      <Button variant="subtle" rightSection={<IconArrowRight size={16} />}>
+                      <Button variant="subtle" size="sm" rightSection={<IconArrowRight size={14} />}>
                         View All
                       </Button>
                     </Link>
                   </Group>
-                  <Grid>
-                    {techNews.map((article) => (
-                      <Grid.Col key={article._id} span={{ base: 12, sm: 6 }}>
+                  <Grid gutter="sm">
+                    {techNews.slice(0, 4).map((article) => (
+                      <Grid.Col key={article._id} span={{ base: 12, sm: 6, lg: 3 }}>
                         <NewsCard article={article} />
                       </Grid.Col>
                     ))}
@@ -253,48 +288,50 @@ export default function HomePage() {
                 </div>
               )}
 
-              {/* Cinema Section */}
+              {/* Cinema Section - Compact */}
               {cinemaNews.length > 0 && (
                 <div>
-                  <Group justify="space-between" mb="md">
-                    <Title order={2}>Cinema</Title>
+                  <Group justify="space-between" mb="sm">
+                    <Title order={3}>Cinema</Title>
                     <Link href="/category/cinema" style={{ textDecoration: 'none' }}>
-                      <Button variant="subtle" rightSection={<IconArrowRight size={16} />}>
+                      <Button variant="subtle" size="sm" rightSection={<IconArrowRight size={14} />}>
                         View All
                       </Button>
                     </Link>
                   </Group>
-                  <Grid>
-                    {cinemaNews.map((article) => (
-                      <Grid.Col key={article._id} span={{ base: 12, sm: 6 }}>
+                  <Grid gutter="sm">
+                    {cinemaNews.slice(0, 4).map((article) => (
+                      <Grid.Col key={article._id} span={{ base: 12, sm: 6, lg: 3 }}>
                         <NewsCard article={article} />
                       </Grid.Col>
                     ))}
                   </Grid>
                 </div>
               )}
-
-              {latestNews.length === 0 && (
-                <Stack align="center" py="xl">
-                  <Text size="xl" c="dimmed">
-                    No news articles yet. Check back soon!
-                  </Text>
-                </Stack>
-              )}
             </Stack>
-          </Grid.Col>
+          </Box>
 
-          {/* Sidebar with Ads */}
-          <Grid.Col span={{ base: 12, md: 4 }}>
-            <Stack gap="xl" style={{ position: 'sticky', top: '80px' }}>
-              {/* Top Sidebar Ad */}
-              <AdSense adSlot="1234567890" />
+          {/* Right Sidebar with Ads */}
+          <Box 
+            className="right-sidebar"
+            style={{ 
+              width: '320px', 
+              flexShrink: 0
+            }}
+          >
+            <Stack gap="lg" style={{ position: 'sticky', top: '100px' }}>
+              {/* Google AdSense - Right Sidebar Top */}
+              <Paper p="md" withBorder style={{ backgroundColor: '#25262B', minHeight: '250px' }}>
+                <AdSenseDisplay adSlot="1111111111" />
+              </Paper>
               
-              {/* Middle Sidebar Ad */}
-              <AdSense adSlot="0987654321" />
+              {/* Google AdSense - Right Sidebar Middle */}
+              <Paper p="md" withBorder style={{ backgroundColor: '#25262B', minHeight: '250px' }}>
+                <AdSenseDisplay adSlot="4444444444" />
+              </Paper>
             </Stack>
-          </Grid.Col>
-        </Grid>
+          </Box>
+        </Flex>
       </Container>
 
       <Footer />

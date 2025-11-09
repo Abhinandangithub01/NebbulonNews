@@ -71,6 +71,23 @@ a {
   font-style: italic;
 }
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Responsive sidebar visibility */
+@media (max-width: 768px) {
+  .left-sidebar {
+    display: none !important;
+  }
+}
+
+@media (max-width: 1200px) {
+  .right-sidebar {
+    display: none !important;
+  }
+}
+
 /* Article content styles */
 .article-content {
   line-height: 1.8;
