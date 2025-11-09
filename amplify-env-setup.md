@@ -32,7 +32,7 @@ S3_BUCKET_NAME = nebbulon-news-images
 
 ### NextAuth Configuration
 ```
-NEXTAUTH_URL = https://main.d2qztaflooyp3k.amplifyapp.com
+NEXTAUTH_URL = https://nebbulon.com
 NEXTAUTH_SECRET = <generate-random-secret>
 ```
 
@@ -151,14 +151,14 @@ aws dynamodb create-table \
 
 Once the deployment is successful:
 
-1. Visit: `https://main.d2qztaflooyp3k.amplifyapp.com/api/admin/init`
+1. Visit: `https://nebbulon.com/api/admin/init`
 2. You should see: `{"message":"Admin created successfully","email":"admin@nebbulon.com"}`
-3. Login at: `https://main.d2qztaflooyp3k.amplifyapp.com/admin/login`
+3. Login at: `https://nebbulon.com/admin/login`
 
 ## Step 7: Test Your Website
 
-1. Homepage: `https://main.d2qztaflooyp3k.amplifyapp.com`
-2. Admin Login: `https://main.d2qztaflooyp3k.amplifyapp.com/admin/login`
+1. Homepage: `https://nebbulon.com`
+2. Admin Login: `https://nebbulon.com/admin/login`
 3. Create your first article!
 
 ## Troubleshooting

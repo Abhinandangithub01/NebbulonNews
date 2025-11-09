@@ -88,8 +88,28 @@ nebbulon/
 4. Add environment variables in Amplify Console
 5. Deploy!
 
+## Deployment
+
+Deploy to AWS Amplify for production. See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed instructions.
+
+**Live Site:** https://nebbulon.com
+
 ## Additional Features to Consider
 
+- **Newsletter Subscription**: Email collection for updates
+- **Advanced Search**: Full-text search across articles
+- **Comments System**: Reader engagement
+- **Bookmarks**: Save articles for later
+- **Analytics Dashboard**: Track views and engagement
+- **Multi-language Support**: Reach wider audience
+- **PWA Support**: Mobile app-like experience
+- **Push Notifications**: Alert readers of breaking news
+- **SEO Optimization**: Better search rankings
+- **Related Articles**: AI-powered recommendations
+- **Social Sharing**: Easy sharing to social platforms
+- **Breaking News Banner**: Highlight urgent stories
+- **Video Content**: Embed and manage video news
+- **Trending Section**: Most viewed/popular articles
 - 📧 **Newsletter Subscription**: Email collection for updates
 - 🔍 **Advanced Search**: Full-text search across articles
 - 💬 **Comments System**: Reader engagement

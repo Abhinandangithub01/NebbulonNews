@@ -122,7 +122,7 @@ aws s3api put-bucket-cors --bucket nebbulon-news-images --cors-configuration fil
 | `DYNAMODB_TABLE_NEWS` | `nebbulon-news-articles` |
 | `DYNAMODB_TABLE_ADMINS` | `nebbulon-admins` |
 | `S3_BUCKET_NAME` | `nebbulon-news-images` (or your bucket name) |
-| `NEXTAUTH_URL` | `https://main.d2qztaflooyp3k.amplifyapp.com` |
+| `NEXTAUTH_URL` | `https://nebbulon.com` |
 | `NEXTAUTH_SECRET` | Generate one below ⬇️ |
 | `ADMIN_EMAIL` | `admin@nebbulon.com` |
 | `ADMIN_PASSWORD` | `Admin@123` |
@@ -155,7 +155,7 @@ Copy the output and use it as the value for `NEXTAUTH_SECRET`.
 Once deployed:
 
 1. **Initialize admin:**
-   Visit: `https://main.d2qztaflooyp3k.amplifyapp.com/api/admin/init`
+   Visit: `https://nebbulon.com/api/admin/init`
    
    You should see:
    ```json
@@ -163,7 +163,7 @@ Once deployed:
    ```
 
 2. **Login:**
-   Go to: `https://main.d2qztaflooyp3k.amplifyapp.com/admin/login`
+   Go to: `https://nebbulon.com/admin/login`
    - Email: `admin@nebbulon.com`
    - Password: `Admin@123`
 
@@ -174,12 +174,12 @@ Once deployed:
 ## 🎉 Done!
 
 Your news website is now live at:
-**https://main.d2qztaflooyp3k.amplifyapp.com**
+**https://nebbulon.com**
 
 ## 📝 Quick Reference
 
-- **App URL:** https://main.d2qztaflooyp3k.amplifyapp.com
-- **Admin Login:** https://main.d2qztaflooyp3k.amplifyapp.com/admin/login
+- **App URL:** https://nebbulon.com
+- **Admin Login:** https://nebbulon.com/admin/login
 - **Amplify Console:** https://console.aws.amazon.com/amplify/home?region=ap-south-1#/d2qztaflooyp3k
 - **DynamoDB:** https://console.aws.amazon.com/dynamodb/home?region=ap-south-1
 - **S3:** https://s3.console.aws.amazon.com/s3/buckets?region=ap-south-1
