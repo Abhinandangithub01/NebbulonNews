@@ -92,7 +92,8 @@ nebbulon/
 
 Deploy to AWS Amplify for production. See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed instructions.
 
-**Live Site:** https://nebbulon.com
+**Live Site:** https://nebbulon.com  
+**Admin Panel:** https://nebbulon.com/superadmin
 
 ## Additional Features to Consider
 
