@@ -13,6 +13,10 @@ import AdSense from '@/components/AdSense';
 import { ArticleDB } from '@/lib/db/articles';
 import { NewsCategory } from '@/types';
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 const validCategories: NewsCategory[] = ['finance', 'automobiles', 'tech', 'cinema'];
 
 const categoryTitles: Record<NewsCategory, string> = {
@@ -23,8 +27,13 @@ const categoryTitles: Record<NewsCategory, string> = {
 };
 
 async function getCategoryArticles(category: NewsCategory) {
-  const articles = await ArticleDB.getAll({ category, published: true, limit: 20 });
-  return articles;
+  try {
+    const articles = await ArticleDB.getAll({ category, published: true, limit: 20 });
+    return articles;
+  } catch (error) {
+    console.error(`Error fetching ${category} articles:`, error);
+    return [];
+  }
 }
 
 export async function generateMetadata({

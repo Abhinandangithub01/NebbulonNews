@@ -18,6 +18,10 @@ import AdSense from '@/components/AdSense';
 import { ArticleDB } from '@/lib/db/articles';
 import { NewsArticle } from '@/types';
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 const categoryColors: Record<string, string> = {
   finance: 'green',
   automobiles: 'orange',
@@ -26,14 +30,19 @@ const categoryColors: Record<string, string> = {
 };
 
 async function getArticle(slug: string): Promise<NewsArticle | null> {
-  const article = await ArticleDB.getBySlug(slug);
-  
-  if (!article) return null;
-  
-  // Increment view count
-  await ArticleDB.incrementViews(article._id);
-  
-  return article;
+  try {
+    const article = await ArticleDB.getBySlug(slug);
+    
+    if (!article) return null;
+    
+    // Increment view count
+    await ArticleDB.incrementViews(article._id);
+    
+    return article;
+  } catch (error) {
+    console.error(`Error fetching article ${slug}:`, error);
+    return null;
+  }
 }
 
 export async function generateMetadata({ params }: { params: { slug: string } }) {

@@ -16,14 +16,28 @@ import AdSense from '@/components/AdSense';
 import { ArticleDB } from '@/lib/db/articles';
 import { NewsCategory } from '@/types';
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 async function getLatestNews() {
-  const articles = await ArticleDB.getAll({ published: true, limit: 10 });
-  return articles;
+  try {
+    const articles = await ArticleDB.getAll({ published: true, limit: 10 });
+    return articles;
+  } catch (error) {
+    console.error('Error fetching latest news:', error);
+    return [];
+  }
 }
 
 async function getCategoryNews(category: NewsCategory, limit = 4) {
-  const articles = await ArticleDB.getAll({ category, published: true, limit });
-  return articles;
+  try {
+    const articles = await ArticleDB.getAll({ category, published: true, limit });
+    return articles;
+  } catch (error) {
+    console.error(`Error fetching ${category} news:`, error);
+    return [];
+  }
 }
 
 export default async function HomePage() {
