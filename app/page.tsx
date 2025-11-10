@@ -14,15 +14,19 @@ import {
   Flex,
   Burger,
   Drawer,
+  Skeleton,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconArrowRight, IconChartLine, IconCar, IconDeviceLaptop, IconMovie } from '@tabler/icons-react';
 import Link from 'next/link';
+import Image from 'next/image';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import NewsCard from '@/components/NewsCard';
 import AdSense from '@/components/AdSense';
 import AdSenseDisplay from '@/components/AdSenseDisplay';
+import TrendingWidget from '@/components/TrendingWidget';
+import ArticleCardSkeleton from '@/components/ArticleCardSkeleton';
 import { NewsArticle } from '@/types';
 
 // Mock data for demo
@@ -471,8 +475,13 @@ export default function HomePage() {
 
           </Grid.Col>
 
-          {/* Right Column - Picks for You & Ads */}
+          {/* Right Column - Trending, Picks & Ads */}
           <Grid.Col span={{ base: 12, md: 4 }}>
+            {/* Trending Widget */}
+            <Box mb="xl">
+              <TrendingWidget articles={mockArticles} />
+            </Box>
+
             {/* Picks for You */}
             <Box mb="xl">
               <Group justify="space-between" mb="md">

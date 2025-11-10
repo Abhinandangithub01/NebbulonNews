@@ -12,11 +12,22 @@ import {
   Paper,
   Divider,
 } from '@mantine/core';
-import { IconClock, IconEye } from '@tabler/icons-react';
+import { IconClock, IconEye, IconBook } from '@tabler/icons-react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import AdSenseDisplay from '@/components/AdSenseDisplay';
+import ShareButtons from '@/components/ShareButtons';
+import Breadcrumbs from '@/components/Breadcrumbs';
+import OptimizedImage from '@/components/OptimizedImage';
 import { NewsArticle } from '@/types';
+
+// Calculate reading time
+function calculateReadingTime(content: string): number {
+  const wordsPerMinute = 200;
+  const text = content.replace(/<[^>]*>/g, '');
+  const wordCount = text.split(/\s+/).length;
+  return Math.ceil(wordCount / wordsPerMinute);
+}
 
 // Mock articles data
 const mockArticles: NewsArticle[] = [
@@ -129,15 +140,13 @@ export default function NewsDetailPage({
       {/* Breadcrumb */}
       <Box style={{ backgroundColor: '#202124', padding: '16px 24px', borderBottom: '1px solid #3C4043' }}>
         <Container size="xl">
-          <Group gap="xs">
-            <Link href="/" style={{ textDecoration: 'none' }}>
-              <Text size="sm" c="#8AB4F8">Home</Text>
-            </Link>
-            <Text size="sm" c="#9AA0A6">/</Text>
-            <Link href={`/category/${article.category}`} style={{ textDecoration: 'none' }}>
-              <Text size="sm" c="#8AB4F8">{article.category}</Text>
-            </Link>
-          </Group>
+          <Breadcrumbs
+            items={[
+              { label: 'Home', href: '/' },
+              { label: article.category, href: `/category/${article.category}` },
+              { label: article.title }
+            ]}
+          />
         </Container>
       </Box>
 
@@ -158,7 +167,7 @@ export default function NewsDetailPage({
                 </Title>
 
                 {/* Meta Information */}
-                <Group gap="lg">
+                <Group gap="lg" wrap="wrap">
                   <Group gap="xs">
                     <IconClock size={16} color="#9AA0A6" />
                     <Text size="sm" c="#9AA0A6">
@@ -175,27 +184,34 @@ export default function NewsDetailPage({
                       {article.views} views
                     </Text>
                   </Group>
+                  <Group gap="xs">
+                    <IconBook size={16} color="#9AA0A6" />
+                    <Text size="sm" c="#9AA0A6">
+                      {calculateReadingTime(article.content)} min read
+                    </Text>
+                  </Group>
                 </Group>
+
+                {/* Share Buttons */}
+                <ShareButtons url={`/news/${article.slug}`} title={article.title} />
 
                 <Divider color="#3C4043" />
 
                 {/* Featured Image */}
                 {article.featuredImage && (
-                  <Box
+                  <OptimizedImage
+                    src={article.featuredImage}
+                    alt={article.title}
+                    width={1200}
+                    height={600}
+                    priority
                     style={{
                       width: '100%',
                       height: '400px',
                       borderRadius: '8px',
-                      overflow: 'hidden',
-                      backgroundColor: '#3C4043'
+                      overflow: 'hidden'
                     }}
-                  >
-                    <img
-                      src={article.featuredImage}
-                      alt={article.title}
-                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                    />
-                  </Box>
+                  />
                 )}
 
                 {/* Excerpt */}
