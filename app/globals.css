@@ -126,3 +126,32 @@ a {
 .article-content li {
   margin-bottom: 0.5em;
 }
+
+/* Theme Variables */
+:root[data-theme="dark"] {
+  --bg-primary: #202124;
+  --bg-secondary: #292A2D;
+  --bg-tertiary: #3C4043;
+  --text-primary: #E8EAED;
+  --text-secondary: #9AA0A6;
+  --text-link: #8AB4F8;
+  --border-color: #3C4043;
+  --hover-bg: #3C4043;
+}
+
+:root[data-theme="light"] {
+  --bg-primary: #FFFFFF;
+  --bg-secondary: #F8F9FA;
+  --bg-tertiary: #E8EAED;
+  --text-primary: #202124;
+  --text-secondary: #5F6368;
+  --text-link: #1A73E8;
+  --border-color: #DADCE0;
+  --hover-bg: #F1F3F4;
+}
+
+/* Smooth theme transitions */
+body,
+.theme-transition {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}

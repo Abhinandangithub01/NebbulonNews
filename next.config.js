@@ -16,6 +16,51 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: ['@mantine/core', '@mantine/hooks'],
   },
+  // Code splitting optimization
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      // Split vendor chunks
+      config.optimization = {
+        ...config.optimization,
+        splitChunks: {
+          chunks: 'all',
+          cacheGroups: {
+            default: false,
+            vendors: false,
+            // Mantine UI vendor chunk
+            mantine: {
+              name: 'mantine',
+              test: /[\\/]node_modules[\\/]@mantine[\\/]/,
+              priority: 40,
+              reuseExistingChunk: true,
+            },
+            // Tabler icons vendor chunk
+            icons: {
+              name: 'icons',
+              test: /[\\/]node_modules[\\/]@tabler[\\/]icons-react[\\/]/,
+              priority: 30,
+              reuseExistingChunk: true,
+            },
+            // Common vendor chunk
+            vendor: {
+              name: 'vendor',
+              test: /[\\/]node_modules[\\/]/,
+              priority: 20,
+              reuseExistingChunk: true,
+            },
+            // Common code chunk
+            common: {
+              name: 'common',
+              minChunks: 2,
+              priority: 10,
+              reuseExistingChunk: true,
+            },
+          },
+        },
+      };
+    }
+    return config;
+  },
   // Disable static optimization for pages with dynamic data
   output: 'standalone',
   // Ensure proper module resolution for Mantine

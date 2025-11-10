@@ -27,6 +27,7 @@ import AdSense from '@/components/AdSense';
 import AdSenseDisplay from '@/components/AdSenseDisplay';
 import TrendingWidget from '@/components/TrendingWidget';
 import ArticleCardSkeleton from '@/components/ArticleCardSkeleton';
+import ThemeToggle from '@/components/ThemeToggle';
 import { NewsArticle } from '@/types';
 
 // Mock data for demo
@@ -198,7 +199,10 @@ export default function HomePage() {
           <Link href="/" style={{ textDecoration: 'none' }}>
             <Text size="20px" fw={500} c="white">Nebbulon News</Text>
           </Link>
-          <Burger opened={opened} onClick={open} hiddenFrom="sm" color="white" size="sm" />
+          <Group gap="md">
+            <ThemeToggle />
+            <Burger opened={opened} onClick={open} hiddenFrom="sm" color="white" size="sm" />
+          </Group>
         </Group>
       </Box>
 

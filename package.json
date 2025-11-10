@@ -7,6 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "analyze": "ANALYZE=true next build",
+    "build:prod": "NODE_ENV=production next build",
     "dynamodb:install": "docker pull amazon/dynamodb-local",
     "dynamodb:start": "docker run -p 8000:8000 amazon/dynamodb-local"
   },
