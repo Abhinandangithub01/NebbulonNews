@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import {
   Container,
   Grid,
@@ -9,7 +10,6 @@ import {
   Group,
   Button,
   Paper,
-  NavLink,
   Box,
   Flex,
 } from '@mantine/core';
@@ -147,6 +147,12 @@ const mockArticles: NewsArticle[] = [
 ];
 
 export default function HomePage() {
+  const [mounted, setMounted] = useState(false);
+  
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const latestNews = mockArticles;
   const financeNews = mockArticles.filter(a => a.category === 'finance');
   const autoNews = mockArticles.filter(a => a.category === 'automobiles');
@@ -163,178 +169,234 @@ export default function HomePage() {
     { name: 'Cinema', icon: IconMovie, href: '/category/cinema', color: 'grape' },
   ];
 
-  return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <Header />
-      
-      <Container size="xl" py="md" style={{ flex: 1 }}>
-        <Flex gap="lg">
-          {/* Left Sidebar Navigation - Hidden on mobile */}
-          <Box 
-            className="left-sidebar"
-            style={{ 
-              width: '240px', 
-              flexShrink: 0
-            }}
-          >
-            <Paper p="lg" withBorder style={{ position: 'sticky', top: '100px', backgroundColor: '#25262B' }}>
-              <Title order={4} mb="md" c="white">Categories</Title>
-              <Stack gap="xs">
-                {categories.map((cat) => (
-                  <NavLink
-                    key={cat.name}
-                    component={Link}
-                    href={cat.href}
-                    label={cat.name}
-                    leftSection={<cat.icon size={20} />}
-                    variant="light"
-                    style={{ borderRadius: '8px', padding: '12px' }}
-                  />
-                ))}
-              </Stack>
-            </Paper>
-          </Box>
+  if (!mounted) {
+    return null;
+  }
 
-          {/* Main Content */}
-          <Box style={{ flex: 1, minWidth: 0 }}>
-            <Stack gap="md">
+  return (
+    <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#1A1B1E' }}>
+      {/* Fixed Left Sidebar - Full Height */}
+      <Box
+        className="left-sidebar"
+        style={{
+          position: 'fixed',
+          left: 0,
+          top: 0,
+          width: '260px',
+          height: '100vh',
+          backgroundColor: '#141517',
+          borderRight: '1px solid #2C2E33',
+          display: 'flex',
+          flexDirection: 'column',
+          zIndex: 100
+        }}
+      >
+        {/* Logo */}
+        <Box p="xl" style={{ borderBottom: '1px solid #2C2E33' }}>
+          <Link href="/" style={{ textDecoration: 'none' }}>
+            <Text
+              size="24px"
+              fw={700}
+              c="white"
+              style={{ letterSpacing: '1px' }}
+            >
+              NEBBULON
+            </Text>
+          </Link>
+        </Box>
+
+        {/* Categories */}
+        <Box p="lg" style={{ flex: 1, overflowY: 'auto' }}>
+          <Text size="xs" tt="uppercase" fw={700} c="dimmed" mb="md" style={{ letterSpacing: '1px' }}>
+            Categories
+          </Text>
+          <Stack gap="xs">
+            {categories.map((cat) => (
+              <Link key={cat.name} href={cat.href} style={{ textDecoration: 'none' }}>
+                <Box
+                  p="md"
+                  style={{
+                    cursor: 'pointer',
+                    backgroundColor: 'transparent',
+                    borderRadius: '8px',
+                    transition: 'all 0.2s',
+                    border: '1px solid transparent'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = '#1F2023';
+                    e.currentTarget.style.borderColor = '#373A40';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                    e.currentTarget.style.borderColor = 'transparent';
+                  }}
+                >
+                  <Group gap="sm">
+                    <cat.icon size={20} color="#5C7CFA" stroke={1.5} />
+                    <Text size="sm" fw={500} c="white">{cat.name}</Text>
+                  </Group>
+                </Box>
+              </Link>
+            ))}
+          </Stack>
+        </Box>
+      </Box>
+
+      {/* Main Content Area */}
+      <Box style={{ marginLeft: '260px', flex: 1, display: 'flex', flexDirection: 'column' }}>
+        {/* Top Header */}
+        <Box
+          style={{
+            backgroundColor: '#1A1B1E',
+            borderBottom: '1px solid #2C2E33',
+            padding: '20px 40px',
+            position: 'sticky',
+            top: 0,
+            zIndex: 50
+          }}
+        >
+          <Text size="lg" fw={600} c="white">Discover News</Text>
+        </Box>
+
+        {/* Content Container */}
+        <Container size="xl" py="xl" style={{ flex: 1 }}>
+          <Box style={{ maxWidth: '1400px', margin: '0 auto' }}>
+            <Stack gap="xl">
               {/* Featured Article */}
               {featuredArticle && (
-                <div>
-                  <Title order={3} mb="sm">
+                <Box>
+                  <Title order={2} mb="lg" c="white" fw={600}>
                     Featured Story
                   </Title>
-                  <NewsCard article={featuredArticle} featured />
-                </div>
+                  <Box style={{ height: '400px', borderRadius: '12px', overflow: 'hidden' }}>
+                    <NewsCard article={featuredArticle} featured />
+                  </Box>
+                </Box>
               )}
 
-              {/* Latest News - Compact Grid */}
-              <div>
-                <Title order={3} mb="sm">Latest News</Title>
-                <Grid gutter="sm">
+              {/* Latest News - Fixed Size Cards */}
+              <Box>
+                <Title order={2} mb="lg" c="white" fw={600}>Latest News</Title>
+                <Grid gutter="lg">
                   {recentArticles.map((article) => (
-                    <Grid.Col key={article._id} span={{ base: 12, sm: 6, lg: 3 }}>
-                      <NewsCard article={article} />
+                    <Grid.Col key={article._id} span={{ base: 12, sm: 6, md: 4, lg: 3 }}>
+                      <Box style={{ height: '320px' }}>
+                        <NewsCard article={article} />
+                      </Box>
                     </Grid.Col>
                   ))}
                 </Grid>
-              </div>
+              </Box>
 
               {/* Google AdSense Ad */}
-              <div style={{ margin: '1rem 0' }}>
+              <Box style={{ padding: '40px', backgroundColor: '#1F2023', borderRadius: '12px', border: '1px solid #2C2E33' }}>
                 <AdSenseDisplay adSlot="7470621474" />
-              </div>
+              </Box>
 
-              {/* Finance Section - Compact */}
+              {/* Finance Section */}
               {financeNews.length > 0 && (
-                <div>
-                  <Group justify="space-between" mb="sm">
-                    <Title order={3}>Finance</Title>
+                <Box>
+                  <Group justify="space-between" mb="lg">
+                    <Title order={2} c="white" fw={600}>Finance</Title>
                     <Link href="/category/finance" style={{ textDecoration: 'none' }}>
-                      <Button variant="subtle" size="sm" rightSection={<IconArrowRight size={14} />}>
+                      <Button variant="light" size="sm" rightSection={<IconArrowRight size={16} />}>
                         View All
                       </Button>
                     </Link>
                   </Group>
-                  <Grid gutter="sm">
+                  <Grid gutter="lg">
                     {financeNews.slice(0, 4).map((article) => (
-                      <Grid.Col key={article._id} span={{ base: 12, sm: 6, lg: 3 }}>
-                        <NewsCard article={article} />
+                      <Grid.Col key={article._id} span={{ base: 12, sm: 6, md: 4, lg: 3 }}>
+                        <Box style={{ height: '320px' }}>
+                          <NewsCard article={article} />
+                        </Box>
                       </Grid.Col>
                     ))}
                   </Grid>
-                </div>
+                </Box>
               )}
 
-              {/* Automobiles Section - Compact */}
+              {/* Automobiles Section */}
               {autoNews.length > 0 && (
-                <div>
-                  <Group justify="space-between" mb="sm">
-                    <Title order={3}>Automobiles</Title>
+                <Box>
+                  <Group justify="space-between" mb="lg">
+                    <Title order={2} c="white" fw={600}>Automobiles</Title>
                     <Link href="/category/automobiles" style={{ textDecoration: 'none' }}>
-                      <Button variant="subtle" size="sm" rightSection={<IconArrowRight size={14} />}>
+                      <Button variant="light" size="sm" rightSection={<IconArrowRight size={16} />}>
                         View All
                       </Button>
                     </Link>
                   </Group>
-                  <Grid gutter="sm">
+                  <Grid gutter="lg">
                     {autoNews.slice(0, 4).map((article) => (
-                      <Grid.Col key={article._id} span={{ base: 12, sm: 6, lg: 3 }}>
-                        <NewsCard article={article} />
+                      <Grid.Col key={article._id} span={{ base: 12, sm: 6, md: 4, lg: 3 }}>
+                        <Box style={{ height: '320px' }}>
+                          <NewsCard article={article} />
+                        </Box>
                       </Grid.Col>
                     ))}
                   </Grid>
-                </div>
+                </Box>
               )}
 
-              {/* Tech Section - Compact */}
+              {/* Tech Section */}
               {techNews.length > 0 && (
-                <div>
-                  <Group justify="space-between" mb="sm">
-                    <Title order={3}>Technology</Title>
+                <Box>
+                  <Group justify="space-between" mb="lg">
+                    <Title order={2} c="white" fw={600}>Technology</Title>
                     <Link href="/category/tech" style={{ textDecoration: 'none' }}>
-                      <Button variant="subtle" size="sm" rightSection={<IconArrowRight size={14} />}>
+                      <Button variant="light" size="sm" rightSection={<IconArrowRight size={16} />}>
                         View All
                       </Button>
                     </Link>
                   </Group>
-                  <Grid gutter="sm">
+                  <Grid gutter="lg">
                     {techNews.slice(0, 4).map((article) => (
-                      <Grid.Col key={article._id} span={{ base: 12, sm: 6, lg: 3 }}>
-                        <NewsCard article={article} />
+                      <Grid.Col key={article._id} span={{ base: 12, sm: 6, md: 4, lg: 3 }}>
+                        <Box style={{ height: '320px' }}>
+                          <NewsCard article={article} />
+                        </Box>
                       </Grid.Col>
                     ))}
                   </Grid>
-                </div>
+                </Box>
               )}
 
-              {/* Cinema Section - Compact */}
+              {/* Cinema Section */}
               {cinemaNews.length > 0 && (
-                <div>
-                  <Group justify="space-between" mb="sm">
-                    <Title order={3}>Cinema</Title>
+                <Box>
+                  <Group justify="space-between" mb="lg">
+                    <Title order={2} c="white" fw={600}>Cinema</Title>
                     <Link href="/category/cinema" style={{ textDecoration: 'none' }}>
-                      <Button variant="subtle" size="sm" rightSection={<IconArrowRight size={14} />}>
+                      <Button variant="light" size="sm" rightSection={<IconArrowRight size={16} />}>
                         View All
                       </Button>
                     </Link>
                   </Group>
-                  <Grid gutter="sm">
+                  <Grid gutter="lg">
                     {cinemaNews.slice(0, 4).map((article) => (
-                      <Grid.Col key={article._id} span={{ base: 12, sm: 6, lg: 3 }}>
-                        <NewsCard article={article} />
+                      <Grid.Col key={article._id} span={{ base: 12, sm: 6, md: 4, lg: 3 }}>
+                        <Box style={{ height: '320px' }}>
+                          <NewsCard article={article} />
+                        </Box>
                       </Grid.Col>
                     ))}
                   </Grid>
-                </div>
+                </Box>
               )}
             </Stack>
           </Box>
+        </Container>
 
-          {/* Right Sidebar with Ads */}
-          <Box 
-            className="right-sidebar"
-            style={{ 
-              width: '320px', 
-              flexShrink: 0
-            }}
-          >
-            <Stack gap="lg" style={{ position: 'sticky', top: '100px' }}>
-              {/* Google AdSense - Right Sidebar Top */}
-              <Paper p="md" withBorder style={{ backgroundColor: '#25262B', minHeight: '250px' }}>
-                <AdSenseDisplay adSlot="1111111111" />
-              </Paper>
-              
-              {/* Google AdSense - Right Sidebar Middle */}
-              <Paper p="md" withBorder style={{ backgroundColor: '#25262B', minHeight: '250px' }}>
-                <AdSenseDisplay adSlot="4444444444" />
-              </Paper>
-            </Stack>
-          </Box>
-        </Flex>
-      </Container>
-
-      <Footer />
+        {/* Footer */}
+        <Box style={{ backgroundColor: '#141517', borderTop: '1px solid #2C2E33', padding: '40px' }}>
+          <Container size="xl">
+            <Text size="sm" c="dimmed" ta="center">
+              © 2024 Nebbulon News. All rights reserved.
+            </Text>
+          </Container>
+        </Box>
+      </Box>
     </div>
   );
 }
