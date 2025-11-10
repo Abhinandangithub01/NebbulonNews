@@ -1,27 +1,37 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import {
   Container,
   Grid,
   Title,
   Stack,
   Text,
+  Box,
+  Group,
+  Paper,
 } from '@mantine/core';
+import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
-import NewsCard from '@/components/NewsCard';
-import AdSense from '@/components/AdSense';
+import AdSenseDisplay from '@/components/AdSenseDisplay';
 import { NewsCategory, NewsArticle } from '@/types';
+import { IconChartLine, IconCar, IconDeviceLaptop, IconMovie } from '@tabler/icons-react';
 
 const validCategories: NewsCategory[] = ['finance', 'automobiles', 'tech', 'cinema'];
 
 const categoryTitles: Record<NewsCategory, string> = {
-  finance: 'Finance News',
-  automobiles: 'Automobile News',
-  tech: 'Technology News',
-  cinema: 'Cinema News',
+  finance: 'Finance',
+  automobiles: 'Automobiles',
+  tech: 'Technology',
+  cinema: 'Cinema',
 };
+
+const categories = [
+  { name: 'Finance', value: 'finance', icon: IconChartLine },
+  { name: 'Automobiles', value: 'automobiles', icon: IconCar },
+  { name: 'Tech', value: 'tech', icon: IconDeviceLaptop },
+  { name: 'Cinema', value: 'cinema', icon: IconMovie },
+];
 
 const mockArticles: Record<NewsCategory, NewsArticle[]> = {
   finance: [
@@ -159,7 +169,17 @@ export default function CategoryPage({
 }: {
   params: { category: string };
 }) {
+  const [mounted, setMounted] = useState(false);
+  
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const category = params.category as NewsCategory;
+
+  if (!mounted) {
+    return null;
+  }
 
   if (!validCategories.includes(category)) {
     notFound();
@@ -168,45 +188,178 @@ export default function CategoryPage({
   const articles = mockArticles[category] || [];
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <Header />
+    <div style={{ minHeight: '100vh', backgroundColor: '#202124' }}>
+      {/* Top Header Bar */}
+      <Box
+        style={{
+          backgroundColor: '#292A2D',
+          borderBottom: '1px solid #3C4043',
+          padding: '12px 24px',
+          position: 'sticky',
+          top: 0,
+          zIndex: 100
+        }}
+      >
+        <Link href="/" style={{ textDecoration: 'none' }}>
+          <Text size="20px" fw={500} c="white">Nebbulon News</Text>
+        </Link>
+      </Box>
 
-      <Container size="xl" py="xl" style={{ flex: 1 }}>
-        <Grid gutter="xl">
+      {/* Category Navigation */}
+      <Box
+        style={{
+          backgroundColor: '#292A2D',
+          borderBottom: '1px solid #3C4043',
+          padding: '0 24px',
+          position: 'sticky',
+          top: '48px',
+          zIndex: 99
+        }}
+      >
+        <Group gap="lg">
+          <Link href="/" style={{ textDecoration: 'none' }}>
+            <Box p="sm" style={{ cursor: 'pointer' }}>
+              <Text size="sm" fw={400} c="#E8EAED">Home</Text>
+            </Box>
+          </Link>
+          {categories.map((cat) => (
+            <Link key={cat.value} href={`/category/${cat.value}`} style={{ textDecoration: 'none' }}>
+              <Box
+                p="sm"
+                style={{
+                  borderBottom: cat.value === category ? '3px solid #8AB4F8' : '3px solid transparent',
+                  cursor: 'pointer'
+                }}
+              >
+                <Text size="sm" fw={cat.value === category ? 500 : 400} c={cat.value === category ? '#8AB4F8' : '#E8EAED'}>
+                  {cat.name}
+                </Text>
+              </Box>
+            </Link>
+          ))}
+        </Group>
+      </Box>
+
+      {/* Breadcrumb */}
+      <Box style={{ backgroundColor: '#202124', padding: '16px 24px', borderBottom: '1px solid #3C4043' }}>
+        <Container size="xl">
+          <Group gap="xs">
+            <Link href="/" style={{ textDecoration: 'none' }}>
+              <Text size="sm" c="#8AB4F8">Home</Text>
+            </Link>
+            <Text size="sm" c="#9AA0A6">/</Text>
+            <Text size="sm" c="#E8EAED">{categoryTitles[category]}</Text>
+          </Group>
+        </Container>
+      </Box>
+
+      <Container size="xl" py="lg">
+        <Grid gutter="lg">
           {/* Main Content */}
           <Grid.Col span={{ base: 12, md: 8 }}>
-            <Stack gap="xl">
-              <Title order={1}>{categoryTitles[category]}</Title>
-
+            <Box mb="xl">
+              <Title order={1} c="white" fw={400} mb="lg">{categoryTitles[category]}</Title>
+              
               {articles.length > 0 ? (
-                <Grid>
+                <Stack gap="xs">
                   {articles.map((article) => (
-                    <Grid.Col key={article._id} span={{ base: 12, sm: 6 }}>
-                      <NewsCard article={article} />
-                    </Grid.Col>
+                    <Link key={article._id} href={`/news/${article.slug}`} style={{ textDecoration: 'none' }}>
+                      <Paper
+                        p="md"
+                        style={{
+                          backgroundColor: '#292A2D',
+                          borderRadius: '8px',
+                          cursor: 'pointer',
+                          transition: 'background-color 0.2s'
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#3C4043'}
+                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#292A2D'}
+                      >
+                        <Group gap="md" align="flex-start">
+                          <Box style={{ flex: 1 }}>
+                            <Text size="xs" c="#9AA0A6" mb="4px">{category.toUpperCase()}</Text>
+                            <Text size="md" fw={400} c="white" mb="xs">{article.title}</Text>
+                            <Text size="sm" c="#9AA0A6" lineClamp={2}>{article.excerpt}</Text>
+                            <Group gap="lg" mt="xs">
+                              <Text size="xs" c="#9AA0A6">{article.author.name}</Text>
+                              <Text size="xs" c="#9AA0A6">{article.views} views</Text>
+                            </Group>
+                          </Box>
+                          {article.featuredImage && (
+                            <Box
+                              style={{
+                                width: '160px',
+                                height: '120px',
+                                borderRadius: '8px',
+                                overflow: 'hidden',
+                                flexShrink: 0,
+                                backgroundColor: '#3C4043'
+                              }}
+                            >
+                              <img
+                                src={article.featuredImage}
+                                alt={article.title}
+                                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                              />
+                            </Box>
+                          )}
+                        </Group>
+                      </Paper>
+                    </Link>
                   ))}
-                </Grid>
+                </Stack>
               ) : (
-                <Stack align="center" py="xl">
-                  <Text size="xl" c="dimmed">
+                <Paper p="xl" style={{ backgroundColor: '#292A2D', borderRadius: '8px', textAlign: 'center' }}>
+                  <Text size="lg" c="#9AA0A6">
                     No articles in this category yet.
                   </Text>
-                </Stack>
+                </Paper>
               )}
-            </Stack>
+            </Box>
           </Grid.Col>
 
-          {/* Sidebar with Ads */}
+          {/* Right Sidebar - Ads */}
           <Grid.Col span={{ base: 12, md: 4 }}>
-            <Stack gap="xl" style={{ position: 'sticky', top: '80px' }}>
-              <AdSense adSlot="5555555555" />
-              <AdSense adSlot="6666666666" />
-            </Stack>
+            <Box style={{ position: 'sticky', top: '120px' }}>
+              <Text size="xs" c="#9AA0A6" mb="md">SPONSORED</Text>
+              <Stack gap="lg">
+                <Paper
+                  p="md"
+                  style={{
+                    backgroundColor: '#292A2D',
+                    borderRadius: '8px',
+                    minHeight: '300px',
+                    border: '1px solid #3C4043'
+                  }}
+                >
+                  <AdSenseDisplay adSlot="5555555555" />
+                </Paper>
+                
+                <Paper
+                  p="md"
+                  style={{
+                    backgroundColor: '#292A2D',
+                    borderRadius: '8px',
+                    minHeight: '300px',
+                    border: '1px solid #3C4043'
+                  }}
+                >
+                  <AdSenseDisplay adSlot="6666666666" />
+                </Paper>
+              </Stack>
+            </Box>
           </Grid.Col>
         </Grid>
       </Container>
 
-      <Footer />
+      {/* Footer */}
+      <Box style={{ backgroundColor: '#292A2D', borderTop: '1px solid #3C4043', padding: '40px', marginTop: '60px' }}>
+        <Container size="xl">
+          <Text size="sm" c="#9AA0A6" ta="center">
+            © 2024 Nebbulon News. All rights reserved.
+          </Text>
+        </Container>
+      </Box>
     </div>
   );
 }

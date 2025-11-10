@@ -12,7 +12,10 @@ import {
   Paper,
   Box,
   Flex,
+  Burger,
+  Drawer,
 } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
 import { IconArrowRight, IconChartLine, IconCar, IconDeviceLaptop, IconMovie } from '@tabler/icons-react';
 import Link from 'next/link';
 import Header from '@/components/Header';
@@ -148,6 +151,7 @@ const mockArticles: NewsArticle[] = [
 
 export default function HomePage() {
   const [mounted, setMounted] = useState(false);
+  const [opened, { open, close }] = useDisclosure(false);
   
   useEffect(() => {
     setMounted(true);
@@ -174,228 +178,378 @@ export default function HomePage() {
   }
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#1A1B1E' }}>
-      {/* Fixed Left Sidebar - Full Height */}
+    <div style={{ minHeight: '100vh', backgroundColor: '#202124' }}>
+      {/* Top Header Bar */}
       <Box
-        className="left-sidebar"
         style={{
-          position: 'fixed',
-          left: 0,
+          backgroundColor: '#292A2D',
+          borderBottom: '1px solid #3C4043',
+          padding: '12px 24px',
+          position: 'sticky',
           top: 0,
-          width: '260px',
-          height: '100vh',
-          backgroundColor: '#141517',
-          borderRight: '1px solid #2C2E33',
-          display: 'flex',
-          flexDirection: 'column',
           zIndex: 100
         }}
       >
-        {/* Logo */}
-        <Box p="xl" style={{ borderBottom: '1px solid #2C2E33' }}>
+        <Group justify="space-between">
           <Link href="/" style={{ textDecoration: 'none' }}>
-            <Text
-              size="24px"
-              fw={700}
-              c="white"
-              style={{ letterSpacing: '1px' }}
-            >
-              NEBBULON
-            </Text>
+            <Text size="20px" fw={500} c="white">Nebbulon News</Text>
           </Link>
-        </Box>
-
-        {/* Categories */}
-        <Box p="lg" style={{ flex: 1, overflowY: 'auto' }}>
-          <Text size="xs" tt="uppercase" fw={700} c="dimmed" mb="md" style={{ letterSpacing: '1px' }}>
-            Categories
-          </Text>
-          <Stack gap="xs">
-            {categories.map((cat) => (
-              <Link key={cat.name} href={cat.href} style={{ textDecoration: 'none' }}>
-                <Box
-                  p="md"
-                  style={{
-                    cursor: 'pointer',
-                    backgroundColor: 'transparent',
-                    borderRadius: '8px',
-                    transition: 'all 0.2s',
-                    border: '1px solid transparent'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = '#1F2023';
-                    e.currentTarget.style.borderColor = '#373A40';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = 'transparent';
-                    e.currentTarget.style.borderColor = 'transparent';
-                  }}
-                >
-                  <Group gap="sm">
-                    <cat.icon size={20} color="#5C7CFA" stroke={1.5} />
-                    <Text size="sm" fw={500} c="white">{cat.name}</Text>
-                  </Group>
-                </Box>
-              </Link>
-            ))}
-          </Stack>
-        </Box>
+          <Burger opened={opened} onClick={open} hiddenFrom="sm" color="white" size="sm" />
+        </Group>
       </Box>
 
-      {/* Main Content Area */}
-      <Box style={{ marginLeft: '260px', flex: 1, display: 'flex', flexDirection: 'column' }}>
-        {/* Top Header */}
-        <Box
-          style={{
-            backgroundColor: '#1A1B1E',
-            borderBottom: '1px solid #2C2E33',
-            padding: '20px 40px',
-            position: 'sticky',
-            top: 0,
-            zIndex: 50
-          }}
-        >
-          <Text size="lg" fw={600} c="white">Discover News</Text>
-        </Box>
+      {/* Mobile Menu Drawer */}
+      <Drawer
+        opened={opened}
+        onClose={close}
+        size="100%"
+        padding="md"
+        title={<Text size="lg" fw={600} c="white">Menu</Text>}
+        styles={{
+          header: { backgroundColor: '#292A2D', borderBottom: '1px solid #3C4043' },
+          body: { backgroundColor: '#202124', padding: 0 },
+          title: { color: 'white' }
+        }}
+      >
+        <Stack gap="xs" p="md">
+          <Link href="/" style={{ textDecoration: 'none' }} onClick={close}>
+            <Paper p="md" style={{ backgroundColor: '#292A2D', borderRadius: '8px', cursor: 'pointer' }}>
+              <Text size="md" c="white">Home</Text>
+            </Paper>
+          </Link>
+          {categories.map((cat) => (
+            <Link key={cat.name} href={cat.href} style={{ textDecoration: 'none' }} onClick={close}>
+              <Paper p="md" style={{ backgroundColor: '#292A2D', borderRadius: '8px', cursor: 'pointer' }}>
+                <Group gap="sm">
+                  <cat.icon size={20} color="#8AB4F8" />
+                  <Text size="md" c="white">{cat.name}</Text>
+                </Group>
+              </Paper>
+            </Link>
+          ))}
+        </Stack>
+      </Drawer>
 
-        {/* Content Container */}
-        <Container size="xl" py="xl" style={{ flex: 1 }}>
-          <Box style={{ maxWidth: '1400px', margin: '0 auto' }}>
-            <Stack gap="xl">
-              {/* Featured Article */}
-              {featuredArticle && (
-                <Box>
-                  <Title order={2} mb="lg" c="white" fw={600}>
-                    Featured Story
-                  </Title>
-                  <Box style={{ height: '400px', borderRadius: '12px', overflow: 'hidden' }}>
-                    <NewsCard article={featuredArticle} featured />
-                  </Box>
-                </Box>
-              )}
+      {/* Category Navigation - Desktop Only */}
+      <Box
+        visibleFrom="sm"
+        style={{
+          backgroundColor: '#292A2D',
+          borderBottom: '1px solid #3C4043',
+          padding: '0 24px',
+          position: 'sticky',
+          top: '48px',
+          zIndex: 99
+        }}
+      >
+        <Group gap="lg">
+          <Link href="/" style={{ textDecoration: 'none' }}>
+            <Box
+              p="sm"
+              style={{
+                borderBottom: '3px solid #8AB4F8',
+                cursor: 'pointer'
+              }}
+            >
+              <Text size="sm" fw={500} c="#8AB4F8">Home</Text>
+            </Box>
+          </Link>
+          {categories.map((cat) => (
+            <Link key={cat.name} href={cat.href} style={{ textDecoration: 'none' }}>
+              <Box
+                p="sm"
+                style={{
+                  cursor: 'pointer',
+                  transition: 'all 0.2s'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderBottom = '3px solid #5F6368';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderBottom = '3px solid transparent';
+                }}
+              >
+                <Text size="sm" fw={400} c="#E8EAED">{cat.name}</Text>
+              </Box>
+            </Link>
+          ))}
+        </Group>
+      </Box>
 
-              {/* Latest News - Fixed Size Cards */}
-              <Box>
-                <Title order={2} mb="lg" c="white" fw={600}>Latest News</Title>
-                <Grid gutter="lg">
-                  {recentArticles.map((article) => (
-                    <Grid.Col key={article._id} span={{ base: 12, sm: 6, md: 4, lg: 3 }}>
-                      <Box style={{ height: '320px' }}>
-                        <NewsCard article={article} />
+      {/* Main Content */}
+      <Container size="xl" py="lg">
+        <Grid gutter="lg">
+          {/* Left Column - Main Content */}
+          <Grid.Col span={{ base: 12, md: 8 }}>
+            {/* Your Briefing */}
+            <Box mb="xl">
+              <Title order={2} c="white" fw={400} mb="xs">Your briefing</Title>
+              <Text size="sm" c="#9AA0A6">Monday 10 November</Text>
+            </Box>
+            {/* Top Stories Section */}
+            <Box mb="xl">
+              <Group justify="space-between" mb="md">
+                <Text size="lg" fw={500} c="white">Top stories</Text>
+                <Text size="sm" c="#8AB4F8" style={{ cursor: 'pointer' }}>→</Text>
+              </Group>
+              
+              <Grid gutter="md">
+                {/* Main Featured Story */}
+                <Grid.Col span={6}>
+                  <Link href={`/news/${featuredArticle.slug}`} style={{ textDecoration: 'none' }}>
+                    <Paper
+                      p="md"
+                      style={{
+                        backgroundColor: '#292A2D',
+                        borderRadius: '8px',
+                        cursor: 'pointer',
+                        height: '100%',
+                        transition: 'background-color 0.2s'
+                      }}
+                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#3C4043'}
+                      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#292A2D'}
+                    >
+                      <Box
+                        style={{
+                          width: '100%',
+                          height: '200px',
+                          borderRadius: '8px',
+                          overflow: 'hidden',
+                          marginBottom: '12px',
+                          backgroundColor: '#3C4043'
+                        }}
+                      >
+                        {featuredArticle.image && (
+                          <img
+                            src={featuredArticle.image}
+                            alt={featuredArticle.title}
+                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                          />
+                        )}
                       </Box>
+                      <Text size="xs" c="#9AA0A6" mb="xs">{featuredArticle.category.toUpperCase()}</Text>
+                      <Text size="md" fw={500} c="white" mb="xs">{featuredArticle.title}</Text>
+                      <Text size="xs" c="#9AA0A6">1 hour ago</Text>
+                    </Paper>
+                  </Link>
+                </Grid.Col>
+
+                {/* Side Stories */}
+                <Grid.Col span={6}>
+                  <Stack gap="xs">
+                    {recentArticles.slice(0, 3).map((article) => (
+                      <Link key={article._id} href={`/news/${article.slug}`} style={{ textDecoration: 'none' }}>
+                        <Paper
+                          p="sm"
+                          style={{
+                            backgroundColor: '#292A2D',
+                            borderRadius: '8px',
+                            cursor: 'pointer',
+                            transition: 'background-color 0.2s'
+                          }}
+                          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#3C4043'}
+                          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#292A2D'}
+                        >
+                          <Text size="xs" c="#9AA0A6" mb="4px">{article.category.toUpperCase()}</Text>
+                          <Text size="sm" fw={400} c="white" lineClamp={2}>{article.title}</Text>
+                          <Text size="xs" c="#9AA0A6" mt="4px">2 hours ago</Text>
+                        </Paper>
+                      </Link>
+                    ))}
+                  </Stack>
+                </Grid.Col>
+              </Grid>
+            </Box>
+
+            {/* Local News Section */}
+            <Box mb="xl">
+              <Group justify="space-between" mb="md">
+                <Text size="lg" fw={500} c="white">Latest News</Text>
+                <Text size="sm" c="#8AB4F8" style={{ cursor: 'pointer' }}>→</Text>
+              </Group>
+              
+              <Stack gap="xs">
+                {recentArticles.slice(0, 4).map((article) => (
+                  <Link key={article._id} href={`/news/${article.slug}`} style={{ textDecoration: 'none' }}>
+                    <Paper
+                      p="md"
+                      style={{
+                        backgroundColor: '#292A2D',
+                        borderRadius: '8px',
+                        cursor: 'pointer',
+                        transition: 'background-color 0.2s'
+                      }}
+                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#3C4043'}
+                      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#292A2D'}
+                    >
+                      <Group gap="md" align="flex-start">
+                        <Box style={{ flex: 1 }}>
+                          <Text size="xs" c="#9AA0A6" mb="4px">{article.category.toUpperCase()}</Text>
+                          <Text size="sm" fw={400} c="white" mb="xs">{article.title}</Text>
+                          <Text size="xs" c="#9AA0A6">{article.excerpt}</Text>
+                          <Text size="xs" c="#9AA0A6" mt="xs">5 hours ago</Text>
+                        </Box>
+                        {article.image && (
+                          <Box
+                            style={{
+                              width: '100px',
+                              height: '100px',
+                              borderRadius: '8px',
+                              overflow: 'hidden',
+                              flexShrink: 0,
+                              backgroundColor: '#3C4043'
+                            }}
+                          >
+                            <img
+                              src={article.image}
+                              alt={article.title}
+                              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                            />
+                          </Box>
+                        )}
+                      </Group>
+                    </Paper>
+                  </Link>
+                ))}
+              </Stack>
+            </Box>
+
+            {/* Finance Section */}
+            {financeNews.length > 0 && (
+              <Box mb="xl">
+                <Group justify="space-between" mb="md">
+                  <Text size="lg" fw={500} c="white">Finance</Text>
+                  <Link href="/category/finance" style={{ textDecoration: 'none' }}>
+                    <Text size="sm" c="#8AB4F8" style={{ cursor: 'pointer' }}>View all →</Text>
+                  </Link>
+                </Group>
+                
+                <Grid gutter="md">
+                  {financeNews.slice(0, 3).map((article) => (
+                    <Grid.Col key={article._id} span={4}>
+                      <Link href={`/news/${article.slug}`} style={{ textDecoration: 'none' }}>
+                        <Paper
+                          p="md"
+                          style={{
+                            backgroundColor: '#292A2D',
+                            borderRadius: '8px',
+                            cursor: 'pointer',
+                            height: '100%',
+                            transition: 'background-color 0.2s'
+                          }}
+                          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#3C4043'}
+                          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#292A2D'}
+                        >
+                          {article.image && (
+                            <Box
+                              style={{
+                                width: '100%',
+                                height: '120px',
+                                borderRadius: '8px',
+                                overflow: 'hidden',
+                                marginBottom: '12px',
+                                backgroundColor: '#3C4043'
+                              }}
+                            >
+                              <img
+                                src={article.image}
+                                alt={article.title}
+                                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                              />
+                            </Box>
+                          )}
+                          <Text size="xs" c="#9AA0A6" mb="4px">FINANCE</Text>
+                          <Text size="sm" fw={400} c="white" lineClamp={2}>{article.title}</Text>
+                          <Text size="xs" c="#9AA0A6" mt="xs">1 day ago</Text>
+                        </Paper>
+                      </Link>
                     </Grid.Col>
                   ))}
                 </Grid>
               </Box>
+            )}
 
-              {/* Google AdSense Ad */}
-              <Box style={{ padding: '40px', backgroundColor: '#1F2023', borderRadius: '12px', border: '1px solid #2C2E33' }}>
+          </Grid.Col>
+
+          {/* Right Column - Picks for You & Ads */}
+          <Grid.Col span={{ base: 12, md: 4 }}>
+            {/* Picks for You */}
+            <Box mb="xl">
+              <Group justify="space-between" mb="md">
+                <Text size="lg" fw={500} c="white">Picks for you</Text>
+              </Group>
+              
+              <Stack gap="xs">
+                {[...autoNews, ...techNews, ...cinemaNews].slice(0, 5).map((article) => (
+                  <Link key={article._id} href={`/news/${article.slug}`} style={{ textDecoration: 'none' }}>
+                    <Paper
+                      p="sm"
+                      style={{
+                        backgroundColor: '#292A2D',
+                        borderRadius: '8px',
+                        cursor: 'pointer',
+                        transition: 'background-color 0.2s'
+                      }}
+                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#3C4043'}
+                      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#292A2D'}
+                    >
+                      <Group gap="sm" align="flex-start">
+                        <Box style={{ flex: 1 }}>
+                          <Text size="xs" c="#9AA0A6" mb="4px">{article.category.toUpperCase()}</Text>
+                          <Text size="sm" fw={400} c="white" lineClamp={2}>{article.title}</Text>
+                          <Text size="xs" c="#9AA0A6" mt="4px">23 hours ago</Text>
+                        </Box>
+                        {article.image && (
+                          <Box
+                            style={{
+                              width: '60px',
+                              height: '60px',
+                              borderRadius: '8px',
+                              overflow: 'hidden',
+                              flexShrink: 0,
+                              backgroundColor: '#3C4043'
+                            }}
+                          >
+                            <img
+                              src={article.image}
+                              alt={article.title}
+                              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                            />
+                          </Box>
+                        )}
+                      </Group>
+                    </Paper>
+                  </Link>
+                ))}
+              </Stack>
+            </Box>
+
+            {/* Ad Section */}
+            <Box>
+              <Text size="xs" c="#9AA0A6" mb="md">SPONSORED</Text>
+              <Paper
+                p="md"
+                style={{
+                  backgroundColor: '#292A2D',
+                  borderRadius: '8px',
+                  minHeight: '300px',
+                  border: '1px solid #3C4043'
+                }}
+              >
                 <AdSenseDisplay adSlot="7470621474" />
-              </Box>
+              </Paper>
+            </Box>
+          </Grid.Col>
+        </Grid>
+      </Container>
 
-              {/* Finance Section */}
-              {financeNews.length > 0 && (
-                <Box>
-                  <Group justify="space-between" mb="lg">
-                    <Title order={2} c="white" fw={600}>Finance</Title>
-                    <Link href="/category/finance" style={{ textDecoration: 'none' }}>
-                      <Button variant="light" size="sm" rightSection={<IconArrowRight size={16} />}>
-                        View All
-                      </Button>
-                    </Link>
-                  </Group>
-                  <Grid gutter="lg">
-                    {financeNews.slice(0, 4).map((article) => (
-                      <Grid.Col key={article._id} span={{ base: 12, sm: 6, md: 4, lg: 3 }}>
-                        <Box style={{ height: '320px' }}>
-                          <NewsCard article={article} />
-                        </Box>
-                      </Grid.Col>
-                    ))}
-                  </Grid>
-                </Box>
-              )}
-
-              {/* Automobiles Section */}
-              {autoNews.length > 0 && (
-                <Box>
-                  <Group justify="space-between" mb="lg">
-                    <Title order={2} c="white" fw={600}>Automobiles</Title>
-                    <Link href="/category/automobiles" style={{ textDecoration: 'none' }}>
-                      <Button variant="light" size="sm" rightSection={<IconArrowRight size={16} />}>
-                        View All
-                      </Button>
-                    </Link>
-                  </Group>
-                  <Grid gutter="lg">
-                    {autoNews.slice(0, 4).map((article) => (
-                      <Grid.Col key={article._id} span={{ base: 12, sm: 6, md: 4, lg: 3 }}>
-                        <Box style={{ height: '320px' }}>
-                          <NewsCard article={article} />
-                        </Box>
-                      </Grid.Col>
-                    ))}
-                  </Grid>
-                </Box>
-              )}
-
-              {/* Tech Section */}
-              {techNews.length > 0 && (
-                <Box>
-                  <Group justify="space-between" mb="lg">
-                    <Title order={2} c="white" fw={600}>Technology</Title>
-                    <Link href="/category/tech" style={{ textDecoration: 'none' }}>
-                      <Button variant="light" size="sm" rightSection={<IconArrowRight size={16} />}>
-                        View All
-                      </Button>
-                    </Link>
-                  </Group>
-                  <Grid gutter="lg">
-                    {techNews.slice(0, 4).map((article) => (
-                      <Grid.Col key={article._id} span={{ base: 12, sm: 6, md: 4, lg: 3 }}>
-                        <Box style={{ height: '320px' }}>
-                          <NewsCard article={article} />
-                        </Box>
-                      </Grid.Col>
-                    ))}
-                  </Grid>
-                </Box>
-              )}
-
-              {/* Cinema Section */}
-              {cinemaNews.length > 0 && (
-                <Box>
-                  <Group justify="space-between" mb="lg">
-                    <Title order={2} c="white" fw={600}>Cinema</Title>
-                    <Link href="/category/cinema" style={{ textDecoration: 'none' }}>
-                      <Button variant="light" size="sm" rightSection={<IconArrowRight size={16} />}>
-                        View All
-                      </Button>
-                    </Link>
-                  </Group>
-                  <Grid gutter="lg">
-                    {cinemaNews.slice(0, 4).map((article) => (
-                      <Grid.Col key={article._id} span={{ base: 12, sm: 6, md: 4, lg: 3 }}>
-                        <Box style={{ height: '320px' }}>
-                          <NewsCard article={article} />
-                        </Box>
-                      </Grid.Col>
-                    ))}
-                  </Grid>
-                </Box>
-              )}
-            </Stack>
-          </Box>
+      {/* Footer */}
+      <Box style={{ backgroundColor: '#292A2D', borderTop: '1px solid #3C4043', padding: '40px', marginTop: '60px' }}>
+        <Container size="xl">
+          <Text size="sm" c="#9AA0A6" ta="center">
+            © 2024 Nebbulon News. All rights reserved.
+          </Text>
         </Container>
-
-        {/* Footer */}
-        <Box style={{ backgroundColor: '#141517', borderTop: '1px solid #2C2E33', padding: '40px' }}>
-          <Container size="xl">
-            <Text size="sm" c="dimmed" ta="center">
-              © 2024 Nebbulon News. All rights reserved.
-            </Text>
-          </Container>
-        </Box>
       </Box>
     </div>
   );
