@@ -19,6 +19,8 @@ import AdSenseDisplay from '@/components/AdSenseDisplay';
 import ShareButtons from '@/components/ShareButtons';
 import Breadcrumbs from '@/components/Breadcrumbs';
 import OptimizedImage from '@/components/OptimizedImage';
+import CommentSection from '@/components/CommentSection';
+import ReadingProgress from '@/components/ReadingProgress';
 import { NewsArticle } from '@/types';
 
 // Calculate reading time
@@ -121,6 +123,9 @@ export default function NewsDetailPage({
 
   return (
     <div style={{ minHeight: '100vh', backgroundColor: '#202124' }}>
+      {/* Reading Progress Bar */}
+      <ReadingProgress />
+      
       {/* Top Header Bar */}
       <Box
         style={{
@@ -321,6 +326,11 @@ export default function NewsDetailPage({
             </Box>
           </Grid.Col>
         </Grid>
+      </Container>
+
+      {/* Comments Section */}
+      <Container size="xl" py="xl">
+        <CommentSection articleId={article._id} />
       </Container>
 
       {/* Footer */}

@@ -28,6 +28,8 @@ import AdSenseDisplay from '@/components/AdSenseDisplay';
 import TrendingWidget from '@/components/TrendingWidget';
 import ArticleCardSkeleton from '@/components/ArticleCardSkeleton';
 import ThemeToggle from '@/components/ThemeToggle';
+import SearchBar from '@/components/SearchBar';
+import NewsletterForm from '@/components/NewsletterForm';
 import { NewsArticle } from '@/types';
 
 // Mock data for demo
@@ -195,10 +197,13 @@ export default function HomePage() {
           zIndex: 100
         }}
       >
-        <Group justify="space-between">
+        <Group justify="space-between" wrap="nowrap">
           <Link href="/" style={{ textDecoration: 'none' }}>
             <Text size="20px" fw={500} c="white">Nebbulon News</Text>
           </Link>
+          <Box visibleFrom="sm" style={{ flex: 1, maxWidth: '500px', margin: '0 20px' }}>
+            <SearchBar />
+          </Box>
           <Group gap="md">
             <ThemeToggle />
             <Burger opened={opened} onClick={open} hiddenFrom="sm" color="white" size="sm" />
@@ -535,6 +540,11 @@ export default function HomePage() {
                   </Link>
                 ))}
               </Stack>
+            </Box>
+
+            {/* Newsletter Section */}
+            <Box mb="xl">
+              <NewsletterForm />
             </Box>
 
             {/* Ad Section */}

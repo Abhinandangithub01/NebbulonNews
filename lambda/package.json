@@ -1,0 +1,16 @@
+{
+  "name": "nebbulon-lambda-functions",
+  "version": "1.0.0",
+  "description": "AWS Lambda functions for Nebbulon News API",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.1490.0",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {},
+  "author": "Nebbulon Team",
+  "license": "MIT"
+}
